@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Administrativo · e-Concessões</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+<!-- ============================================================
+     LOGIN
+     ============================================================ -->
+<section id="admin-login" class="admin-login">
+  <form id="admin-login-form" class="admin-login-card">
+    <img class="admin-login-logo" src="assets/images/e-safer-logo.png" alt="e-Safer">
+    <h1>Painel Administrativo</h1>
+    <p class="admin-login-desc">Acesso restrito. Entre com seu e-mail e senha de administrador para gerenciar o e-Concessões.</p>
+    <label class="admin-field">
+      <span>E-mail</span>
+      <input type="email" id="admin-user" autocomplete="email" required>
+    </label>
+    <label class="admin-field">
+      <span>Senha</span>
+      <input type="password" id="admin-pass" autocomplete="current-password" required>
+    </label>
+    <p id="admin-login-error" class="admin-login-error" hidden>E-mail ou senha incorretos.</p>
+    <button type="submit" class="btn btn-primary btn-block" id="admin-login-submit">ENTRAR</button>
+    <a class="admin-login-back" href="index.html">&larr; Voltar para o e-Concessões</a>
+  </form>
+
+  <div id="admin-not-configured" class="admin-login-card" hidden>
+    <img class="admin-login-logo" src="assets/images/e-safer-logo.png" alt="e-Safer">
+    <h1>Painel Administrativo</h1>
+    <p class="admin-login-desc">O backend deste painel ainda não foi configurado. Siga o guia <code>SETUP-SUPABASE.md</code>, incluído no projeto, para criar o banco de dados gratuito e o usuário administrador — depois cole as chaves em <code>supabase-config.js</code>.</p>
+    <a class="admin-login-back" href="index.html">&larr; Voltar para o e-Concessões</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAINEL
+     ============================================================ -->
+<div id="admin-app" class="admin-app" hidden>
+
+  <header class="admin-header">
+    <div class="admin-header-brand">
+      <img src="assets/images/e-safer-logo.png" alt="e-Safer">
+      <span>Painel Administrativo</span>
+    </div>
+    <div class="admin-header-actions">
+      <a class="btn btn-ghost btn-sm" href="index.html" target="_blank" rel="noopener">VER SITE</a>
+      <button class="btn btn-ghost btn-sm" id="admin-logout">SAIR</button>
+    </div>
+  </header>
+
+  <div class="admin-body-grid">
+    <nav class="admin-nav">
+      <button class="admin-nav-item is-active" data-tab="concessoes">Concessões</button>
+      <button class="admin-nav-item" data-tab="calendario">Calendário</button>
+      <button class="admin-nav-item" data-tab="documentos">Documentos</button>
+      <button class="admin-nav-item" data-tab="avisos">Avisos</button>
+      <button class="admin-nav-item" data-tab="dados">Dados e Publicação</button>
+    </nav>
+
+    <main class="admin-main">
+
+      <!-- ===================== CONCESSÕES ===================== -->
+      <section class="admin-panel" data-panel="concessoes">
+        <div class="admin-panel-head">
+          <h2>Concessões</h2>
+          <p>Edite o conteúdo dos cards de concessões exibidos em cada vínculo.</p>
+        </div>
+        <div class="admin-audience-tabs" data-audience-tabs="concessoes">
+          <button class="chip is-active" data-aud="clt">CLT</button>
+          <button class="chip" data-aud="cooperativa">Cooperativa</button>
+          <button class="chip" data-aud="pj">PJ</button>
+        </div>
+        <div class="admin-list" id="admin-benefits-list"></div>
+        <button class="btn btn-primary" id="admin-benefit-new">+ NOVA CONCESSÃO</button>
+      </section>
+
+      <!-- ===================== CALENDÁRIO ===================== -->
+      <section class="admin-panel" data-panel="calendario" hidden>
+        <div class="admin-panel-head">
+          <h2>Eventos do calendário</h2>
+          <p>Lance eventos pontuais no calendário de cada vínculo. Os eventos automáticos (remuneração, recarga das concessões e feriados) continuam sendo calculados normalmente e não aparecem aqui.</p>
+        </div>
+        <div class="admin-audience-tabs" data-audience-tabs="calendario">
+          <button class="chip is-active" data-aud="clt">CLT</button>
+          <button class="chip" data-aud="cooperativa">Cooperativa</button>
+          <button class="chip" data-aud="pj">PJ</button>
+        </div>
+        <div class="admin-list" id="admin-events-list"></div>
+        <button class="btn btn-primary" id="admin-event-new">+ NOVO EVENTO</button>
+      </section>
+
+      <!-- ===================== DOCUMENTOS ===================== -->
+      <section class="admin-panel" data-panel="documentos" hidden>
+        <div class="admin-panel-head">
+          <h2>Documentos e políticas</h2>
+          <p>Publique documentos para a área de Documentos de cada vínculo. Você pode anexar um arquivo PDF (fica armazenado com segurança e publicado automaticamente) ou informar um link já hospedado.</p>
+        </div>
+        <div class="admin-audience-tabs" data-audience-tabs="documentos">
+          <button class="chip is-active" data-aud="clt">CLT</button>
+          <button class="chip" data-aud="cooperativa">Cooperativa</button>
+          <button class="chip" data-aud="pj">PJ</button>
+        </div>
+        <div class="admin-list" id="admin-docs-list"></div>
+        <button class="btn btn-primary" id="admin-doc-new">+ NOVO DOCUMENTO</button>
+      </section>
+
+      <!-- ===================== AVISOS ===================== -->
+      <section class="admin-panel" data-panel="avisos" hidden>
+        <div class="admin-panel-head">
+          <h2>Avisos na Home</h2>
+          <p>Publique comunicados que aparecem em destaque no topo da Home. Use o interruptor "Ativo" para publicar ou ocultar um aviso sem precisar excluí-lo.</p>
+        </div>
+        <div class="admin-list" id="admin-avisos-list"></div>
+        <button class="btn btn-primary" id="admin-aviso-new">+ NOVO AVISO</button>
+      </section>
+
+      <!-- ===================== DADOS E PUBLICAÇÃO ===================== -->
+      <section class="admin-panel" data-panel="dados" hidden>
+        <div class="admin-panel-head">
+          <h2>Dados e publicação</h2>
+          <p>Toda alteração salva neste painel é publicada instantaneamente no banco de dados — assim que você clica em "Salvar" em qualquer aba, todos os usuários já veem a mudança (na próxima vez que abrirem ou atualizarem o site). Não é mais necessário nenhum passo manual de publicação.</p>
+        </div>
+        <div class="admin-data-card">
+          <h3>Backup</h3>
+          <p>Salve uma cópia de segurança de todo o conteúdo publicado, ou restaure um backup salvo anteriormente (também publicado na hora).</p>
+          <div class="admin-data-actions">
+            <button class="btn btn-secondary" id="admin-export-backup">BAIXAR BACKUP (JSON)</button>
+            <label class="btn btn-secondary admin-file-btn">
+              IMPORTAR BACKUP
+              <input type="file" id="admin-import-backup" accept="application/json" hidden>
+            </label>
+          </div>
+        </div>
+        <div class="admin-data-card">
+          <h3>Arquivo local (data.js)</h3>
+          <p>Gera um arquivo <code>data.js</code> com o conteúdo publicado atualmente — útil para manter uma cópia no repositório do projeto ou como conteúdo inicial em um novo ambiente.</p>
+          <button class="btn btn-secondary" id="admin-export-datajs">BAIXAR data.js ATUAL</button>
+        </div>
+        <div class="admin-data-card admin-data-card-danger">
+          <h3>Restaurar padrão</h3>
+          <p><strong>Atenção:</strong> isso publica o conteúdo original de fábrica para TODOS os usuários agora, substituindo tudo o que foi editado neste painel.</p>
+          <button class="btn btn-ghost" id="admin-reset">RESTAURAR PADRÃO PARA TODOS</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===================== MODAL DE EDIÇÃO ===================== -->
+<div id="admin-modal-overlay" class="admin-modal-overlay" hidden>
+  <div class="admin-modal">
+    <button class="admin-modal-close" id="admin-modal-close" aria-label="Fechar">&times;</button>
+    <div id="admin-modal-body"></div>
+  </div>
+</div>
+
+<div id="admin-toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

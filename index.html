@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>e-Concessões · e-Safer</title>
+<meta name="description" content="e-Concessões: concessões, desenvolvimento, documentos, acessos e cuidado em um só lugar, de acordo com o seu vínculo com a e-Safer.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     TELA INICIAL — SELEÇÃO DE VÍNCULO
+     ============================================================ -->
+<section id="screen-landing" class="landing">
+  <div class="landing-bg" aria-hidden="true">
+    <span class="floating-icon fi-1" data-icon="calendar"></span>
+    <span class="floating-icon fi-2" data-icon="gift"></span>
+    <span class="floating-icon fi-3" data-icon="file"></span>
+    <span class="floating-icon fi-4" data-icon="book"></span>
+    <span class="floating-icon fi-5" data-icon="heart"></span>
+    <span class="floating-icon fi-6" data-icon="link"></span>
+  </div>
+
+  <div class="landing-content">
+    <div class="brand-lockup">
+      <span class="esafer-logo large">
+        <img class="esafer-logo-img" src="assets/images/e-safer-logo.png" alt="e-Safer">
+      </span>
+    </div>
+
+    <h1 class="landing-title">e-Concessões</h1>
+    <p class="landing-slogan">Tudo em um só lugar.</p>
+    <p class="landing-desc">Informações, concessões, cuidado e acessos de acordo com o seu vínculo.</p>
+
+    <div class="audience-select">
+      <p class="audience-question">Qual é o seu vínculo?</p>
+      <div class="audience-cards" role="group" aria-label="Selecione seu vínculo">
+        <button class="audience-card" data-audience="clt">
+          <span class="audience-card-icon" data-icon="shield"></span>
+          <span class="audience-card-name">CLT, Jovem Aprendiz ou Estágio</span>
+        </button>
+        <button class="audience-card" data-audience="cooperativa">
+          <span class="audience-card-icon" data-icon="users"></span>
+          <span class="audience-card-name">Cooperativa</span>
+        </button>
+        <button class="audience-card" data-audience="pj">
+          <span class="audience-card-icon" data-icon="link"></span>
+          <span class="audience-card-name">PJ</span>
+        </button>
+      </div>
+      <button id="btn-access" class="btn btn-primary btn-large" disabled>ACESSAR</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PLATAFORMA PRINCIPAL
+     ============================================================ -->
+<div id="screen-main" hidden>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <button id="mobile-menu-toggle" class="icon-btn only-mobile" aria-label="Abrir menu">
+        <span data-icon="compass"></span>
+      </button>
+      <span class="esafer-logo">
+        <img class="esafer-logo-img" src="assets/images/e-safer-logo.png" alt="e-Safer">
+      </span>
+      <span class="topbar-divider" aria-hidden="true"></span>
+      <span class="topbar-product">e-Concessões</span>
+    </div>
+    <div class="topbar-right">
+      <button id="btn-open-search" class="icon-btn" aria-label="Buscar">
+        <span data-icon="search"></span>
+      </button>
+      <div class="audience-indicator">
+        <span class="audience-indicator-label">Seu vínculo</span>
+        <span class="audience-indicator-value" id="audience-badge"></span>
+        <button id="btn-swap-audience" class="link-btn">
+          <span data-icon="swap"></span> Trocar vínculo
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <nav id="sidenav" class="sidenav" aria-label="Navegação principal">
+      <button class="nav-btn is-active" data-view="home"><span data-icon="home"></span><span>Início</span></button>
+      <button class="nav-btn" data-view="calendar"><span data-icon="calendar"></span><span>Calendário</span></button>
+      <button class="nav-btn" data-view="benefits"><span data-icon="gift"></span><span>Concessões</span></button>
+      <button class="nav-btn" data-view="development"><span data-icon="book"></span><span>Desenvolvimento</span></button>
+      <button class="nav-btn" data-view="documents"><span data-icon="file"></span><span>Documentos</span></button>
+      <button class="nav-btn" data-view="access"><span data-icon="link"></span><span>Acessos</span></button>
+      <button class="nav-btn nav-btn-care" data-view="care"><span data-icon="heart"></span><span>e-Cuidado</span></button>
+    </nav>
+
+    <main id="app-main" class="app-main">
+
+      <!-- ===================== HOME ===================== -->
+      <section id="view-home" class="view">
+
+        <div id="home-avisos" class="home-avisos" hidden></div>
+
+        <section class="hero">
+          <button class="hero-eyebrow" id="hero-upcoming" data-goto="calendar" hidden>
+            <span data-icon="calendar"></span>
+            <span id="hero-upcoming-text"></span>
+            <span class="hero-eyebrow-link">Ver calendário <span data-icon="arrowRight"></span></span>
+          </button>
+          <h1 class="hero-title"><span class="e-accent">e-</span>Concessões</h1>
+          <p class="hero-slogan">Tudo em um só lugar.</p>
+          <p class="hero-desc">Concessões, desenvolvimento, informações e cuidado para facilitar sua rotina.</p>
+        </section>
+
+        <section class="panel">
+          <button class="banner-care" id="btn-open-quickpause">
+            <span class="banner-care-icon" data-icon="clock"></span>
+            <span class="banner-care-text">
+              <span class="banner-care-title">Tem 5 minutos?</span>
+              <span class="banner-care-desc">Faça uma pequena pausa.</span>
+            </span>
+            <span class="banner-care-cta">VER UMA SUGESTÃO <span data-icon="arrowRight"></span></span>
+          </button>
+        </section>
+
+        <section class="panel">
+          <button class="banner-care banner-care-apoio" id="btn-open-apoio-psicologico">
+            <span class="banner-care-icon" data-icon="heart"></span>
+            <span class="banner-care-text">
+              <span class="banner-care-title">Apoio psicológico</span>
+              <span class="banner-care-desc">Atendimento psicológico e psiquiátrico online.</span>
+            </span>
+            <span class="banner-care-cta">ACESSAR <span data-icon="arrowRight"></span></span>
+          </button>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-question panel-question-large">O que você precisa hoje?</h2>
+          <div class="need-grid">
+            <button class="need-card" data-cat="beneficios" data-goto="benefits">
+              <span class="need-icon" data-icon="gift"></span>
+              <span class="need-title">Quero conhecer minhas concessões</span>
+              <span class="need-desc">Veja o que está disponível para você.</span>
+            </button>
+            <button class="need-card" data-cat="desenvolvimento" data-goto="development">
+              <span class="need-icon" data-icon="book"></span>
+              <span class="need-title">Quero me desenvolver</span>
+              <span class="need-desc">Certificações, treinamentos e oportunidades.</span>
+            </button>
+            <button class="need-card" data-cat="documentos" data-goto="documents">
+              <span class="need-icon" data-icon="file"></span>
+              <span class="need-title">Preciso encontrar um documento</span>
+              <span class="need-desc">Políticas e documentos organizados.</span>
+            </button>
+            <button class="need-card" data-cat="acessos" data-goto="access">
+              <span class="need-icon" data-icon="link"></span>
+              <span class="need-title">Preciso acessar uma plataforma</span>
+              <span class="need-desc">Atalhos para os sistemas que você usa.</span>
+            </button>
+            <button class="need-card" data-cat="apoio" data-goto="care" data-care-tab="support">
+              <span class="need-icon" data-icon="support"></span>
+              <span class="need-title">Preciso de apoio</span>
+              <span class="need-desc">Recursos de apoio disponíveis para você.</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-question">Para você hoje</h2>
+          <div id="home-fortoday" class="fortoday-grid"></div>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-question">Conheça o que está disponível</h2>
+          <div id="home-highlights" class="highlights-row"></div>
+        </section>
+      </section>
+
+      <!-- ===================== CALENDÁRIO ===================== -->
+      <section id="view-calendar" class="view" data-cat="calendario" hidden>
+        <div class="hub-hero" data-cat="calendario">
+          <span class="hub-hero-icon" data-icon="calendar"></span>
+          <div>
+            <h1>Próximas datas.</h1>
+            <p class="hub-hero-sub">Veja datas e informações importantes do seu vínculo.</p>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="calendar-nav">
+            <button id="calendar-prev" class="icon-btn" aria-label="Mês anterior"><span data-icon="chevronLeft"></span></button>
+            <span id="calendar-month-label" class="calendar-month-label"></span>
+            <button id="calendar-next" class="icon-btn" aria-label="Próximo mês"><span data-icon="chevronRight"></span></button>
+          </div>
+          <div class="calendar-weekdays">
+            <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+          </div>
+          <div id="calendar-grid" class="calendar-grid"></div>
+          <div class="calendar-legend">
+            <span class="legend-item"><span class="marker marker-ring"></span> Remuneração</span>
+            <span class="legend-item"><span class="marker marker-dot"></span> Concessões</span>
+            <span class="legend-item"><span class="marker marker-yellow"></span> Feriados</span>
+            <span class="legend-item"><span class="marker marker-square"></span> Eventos</span>
+          </div>
+        </section>
+      </section>
+
+      <!-- ===================== BENEFÍCIOS ===================== -->
+      <section id="view-benefits" class="view" data-cat="beneficios" hidden>
+        <div class="hub-hero" data-cat="beneficios">
+          <span class="hub-hero-icon" data-icon="gift"></span>
+          <div>
+            <h1>Suas concessões em um só lugar.</h1>
+            <p class="hub-hero-sub">Entenda o que está disponível e como acessar.</p>
+          </div>
+        </div>
+
+        <div class="search-wrap search-wrap-inline">
+          <span class="search-icon" data-icon="search"></span>
+          <input id="benefit-search" type="text" placeholder="Qual concessão você procura?" autocomplete="off">
+        </div>
+
+        <div id="benefit-filters" class="chip-row"></div>
+        <div id="benefits-grid" class="cards-grid"></div>
+        <p id="benefits-pending-note" class="pending-note" hidden></p>
+      </section>
+
+      <!-- ===================== DESENVOLVIMENTO ===================== -->
+      <section id="view-development" class="view" data-cat="desenvolvimento" hidden>
+        <div class="hub-hero" data-cat="desenvolvimento">
+          <span class="hub-hero-icon" data-icon="book"></span>
+          <div>
+            <h1>Continue aprendendo.</h1>
+            <p class="hub-hero-sub">Treinamentos, oportunidades e recursos para sua evolução.</p>
+          </div>
+        </div>
+
+        <div id="dev-tabs" class="chip-row"></div>
+        <div id="dev-grid" class="cards-grid"></div>
+      </section>
+
+      <!-- ===================== DOCUMENTOS ===================== -->
+      <section id="view-documents" class="view" data-cat="documentos" hidden>
+        <div class="hub-hero" data-cat="documentos">
+          <span class="hub-hero-icon" data-icon="file"></span>
+          <div>
+            <h1>Encontre sem complicação.</h1>
+            <p class="hub-hero-sub">Políticas e documentos organizados em um só lugar.</p>
+          </div>
+        </div>
+
+        <div class="search-wrap search-wrap-inline">
+          <span class="search-icon" data-icon="search"></span>
+          <input id="doc-search" type="text" placeholder="Buscar documento ou política" autocomplete="off">
+        </div>
+
+        <div id="doc-filters" class="chip-row"></div>
+        <div id="documents-grid" class="cards-grid"></div>
+      </section>
+
+      <!-- ===================== ACESSOS RÁPIDOS ===================== -->
+      <section id="view-access" class="view" data-cat="acessos" hidden>
+        <div class="hub-hero" data-cat="acessos">
+          <span class="hub-hero-icon" data-icon="link"></span>
+          <div>
+            <h1>Seus acessos rápidos.</h1>
+            <p class="hub-hero-sub">Entre nas plataformas que fazem parte da sua rotina.</p>
+          </div>
+        </div>
+        <div id="access-grid" class="cards-grid"></div>
+      </section>
+
+      <!-- ===================== e-CUIDADO ===================== -->
+      <section id="view-care" class="view view-care-bg" data-cat="cuidado" hidden>
+        <div class="hub-hero" data-cat="cuidado">
+          <span class="hub-hero-icon" data-icon="heart"></span>
+          <div>
+            <h1>Um tempo para você.</h1>
+            <p class="hub-hero-sub">Pequenas pausas que cabem na sua rotina.</p>
+          </div>
+        </div>
+
+        <section class="panel panel-highlight">
+          <h2 class="panel-question">Quanto tempo você tem agora?</h2>
+          <div class="time-chip-row">
+            <button class="time-chip" data-time="2">2 MIN</button>
+            <button class="time-chip" data-time="5">5 MIN</button>
+            <button class="time-chip" data-time="10">10 MIN</button>
+            <button class="time-chip" data-time="15">15 MIN</button>
+          </div>
+          <div id="care-time-panel" class="care-time-panel" hidden>
+            <div id="care-activity-preview" class="care-activity-preview"></div>
+            <div class="care-time-actions">
+              <button id="care-start" class="btn btn-primary">COMEÇAR</button>
+              <button id="care-suggest" class="btn btn-secondary">ME SUGIRA ALGO</button>
+            </div>
+          </div>
+        </section>
+
+        <nav id="care-subnav" class="care-subnav" aria-label="Áreas do e-Cuidado">
+          <button class="care-subnav-item" data-caretab="mind">
+            <span class="care-subnav-icon" data-icon="brain"></span>
+            <span>Faça uma pausa</span>
+          </button>
+          <button class="care-subnav-item" data-caretab="body">
+            <span class="care-subnav-icon" data-icon="walk"></span>
+            <span>Movimente-se</span>
+          </button>
+          <button class="care-subnav-item" data-caretab="support">
+            <span class="care-subnav-icon" data-icon="support"></span>
+            <span>Preciso de apoio</span>
+          </button>
+          <button class="care-subnav-item" data-caretab="office">
+            <span class="care-subnav-icon" data-icon="coffee"></span>
+            <span>No Escritório</span>
+          </button>
+          <button class="care-subnav-item" data-caretab="routine">
+            <span class="care-subnav-icon" data-icon="compass"></span>
+            <span>Organize sua rotina</span>
+          </button>
+        </nav>
+
+        <section class="panel care-subpanel" id="view-mind" data-caretab-panel="mind">
+          <h2 class="panel-question"><span data-icon="brain"></span> Faça uma pausa</h2>
+          <div id="mind-grid" class="cards-grid cards-grid-small"></div>
+          <h3 class="panel-subquestion">Conteúdos rápidos</h3>
+          <div id="mind-reads" class="reads-grid"></div>
+        </section>
+
+        <section class="panel care-subpanel" id="view-body" data-caretab-panel="body" hidden>
+          <h2 class="panel-question"><span data-icon="walk"></span> Movimente-se</h2>
+          <p class="panel-subtitle">Para fazer agora</p>
+          <div id="body-grid" class="cards-grid cards-grid-small"></div>
+
+          <h3 class="panel-subquestion">Como está seu espaço agora?</h3>
+          <div id="ergo-checklist" class="checklist"></div>
+          <p id="ergo-feedback" class="ergo-feedback"></p>
+        </section>
+
+        <section class="panel care-subpanel" id="view-support" data-caretab-panel="support" data-cat="apoio" hidden>
+          <h2 class="panel-question"><span data-icon="support"></span> Preciso de apoio</h2>
+          <div id="support-grid" class="cards-grid"></div>
+          <p class="support-disclaimer">
+            <span data-icon="info"></span>
+            O e-Concessões informa e direciona para os recursos disponíveis. Não realiza diagnósticos e não substitui atendimento profissional.
+          </p>
+        </section>
+
+        <section class="panel care-subpanel" id="view-office" data-caretab-panel="office" hidden>
+          <h2 class="panel-question"><span data-icon="coffee"></span> No Escritório</h2>
+          <p class="panel-subtitle">Pequenos momentos presenciais que fazem parte da sua rotina no escritório.</p>
+          <div id="office-grid" class="office-list"></div>
+        </section>
+
+        <section class="panel care-subpanel" id="view-routine" data-caretab-panel="routine" hidden>
+          <h2 class="panel-question"><span data-icon="compass"></span> Organize sua rotina</h2>
+          <div id="routine-grid" class="cards-grid cards-grid-small"></div>
+        </section>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="app-footer">
+    <div class="app-footer-top">
+      <div class="app-footer-brand">
+        <span class="esafer-logo on-dark">
+          <img class="esafer-logo-img" src="assets/images/e-safer-logo.png" alt="e-Safer">
+        </span>
+        <p class="app-footer-lockup"><span class="product-wordmark"><span class="e-accent">e-</span>Concessões</span></p>
+        <p class="app-footer-slogan">Tudo em um só lugar.</p>
+      </div>
+
+      <div class="app-footer-col">
+        <h3>Explore</h3>
+        <button data-goto="home">Início</button>
+        <button data-goto="benefits">Concessões</button>
+        <button data-goto="development">Desenvolvimento</button>
+        <button data-goto="calendar">Calendário</button>
+      </div>
+
+      <div class="app-footer-col">
+        <h3>Acesso rápido</h3>
+        <button data-goto="documents">Documentos</button>
+        <button data-goto="access">Plataformas</button>
+        <button data-goto="care">e-Cuidado</button>
+        <button data-goto="care" data-care-tab="support">Preciso de apoio</button>
+      </div>
+
+      <div class="app-footer-col">
+        <h3>Sobre</h3>
+        <span>Sobre o e-Concessões</span>
+        <span>Privacidade</span>
+        <span>Contato RH</span>
+      </div>
+    </div>
+    <div class="app-footer-divider"></div>
+    <div class="app-footer-bottom">
+      <span>e-Concessões · Experiência do Colaborador</span>
+      <span>Uma plataforma da e-Safer para facilitar a rotina de quem faz o negócio acontecer.</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================================================
+     MODAL DE BUSCA
+     ============================================================ -->
+<div id="search-overlay" class="modal-overlay search-overlay" hidden>
+  <div class="modal search-modal" role="dialog" aria-modal="true">
+    <button id="search-close" class="icon-btn modal-close" aria-label="Fechar busca"><span data-icon="close"></span></button>
+    <div class="search-wrap search-wrap-modal">
+      <span class="search-icon" data-icon="search"></span>
+      <input id="global-search" type="text" placeholder="O que você procura?" autocomplete="off">
+    </div>
+    <div id="search-results" class="search-results search-results-modal" hidden></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL GENÉRICO
+     ============================================================ -->
+<div id="modal-overlay" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button id="modal-close" class="icon-btn modal-close" aria-label="Fechar"><span data-icon="close"></span></button>
+    <div id="modal-body" class="modal-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
