@@ -23,7 +23,7 @@
    conteúdo padrão e o Painel Administrativo avisa que o backend ainda
    não foi configurado.
    ------------------------------------------------------------ */
-const SUPABASE_URL = 'SUA_URL_AQUI';
-const SUPABASE_ANON_KEY = 'SUA_CHAVE_AQUI';
+const SUPABASE_URL = 'https://qxkvavbbwzqdsyozggye.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_VQpc_qI2NejIu11pYpkA1g_tsO5gyhE';
 
 const SUPABASE_CONFIGURED = SUPABASE_URL !== 'SUA_URL_AQUI' && SUPABASE_ANON_KEY !== 'SUA_CHAVE_AQUI';
