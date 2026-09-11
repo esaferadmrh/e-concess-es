@@ -422,7 +422,15 @@ function openDocForm(aud, d) {
   const isNew = !d;
   openAdminModal(`
     <h3>${isNew ? 'Novo documento' : 'Editar documento'}</h3>
-    <p class="admin-modal-note">Vínculo: <strong>${AUDIENCE_LABELS[aud]}</strong>. Anexe um arquivo PDF ou informe uma URL de um documento já hospedado — use apenas uma das duas opções.</p>
+    ${isNew ? `
+    <p class="admin-modal-note">Escolha para quais vínculos este documento será publicado. Pode marcar mais de um para não precisar repetir o upload.</p>
+    <div class="chip-row" id="doc-audience-chips">
+      <button type="button" class="chip${aud === 'clt' ? ' is-active' : ''}" data-aud="clt">CLT</button>
+      <button type="button" class="chip${aud === 'cooperativa' ? ' is-active' : ''}" data-aud="cooperativa">Cooperativa</button>
+      <button type="button" class="chip${aud === 'pj' ? ' is-active' : ''}" data-aud="pj">PJ</button>
+    </div>
+    ` : `<p class="admin-modal-note">Vínculo: <strong>${AUDIENCE_LABELS[aud]}</strong>. Para publicar este mesmo documento em outro vínculo, crie um novo documento e marque os vínculos desejados.</p>`}
+    <p class="admin-modal-note">Anexe um arquivo PDF ou informe uma URL de um documento já hospedado — use apenas uma das duas opções.</p>
     <form class="admin-form" id="doc-form">
       <div class="admin-form-row">
         <label class="admin-field"><span>Nome *</span><input type="text" id="doc-name" required value="${esc(d?.name)}"></label>
@@ -432,6 +440,7 @@ function openDocForm(aud, d) {
       <label class="admin-field"><span>Anexar arquivo PDF</span><input type="file" id="doc-file" accept="application/pdf"></label>
       <p class="admin-form-hint">${d?.fileName ? `Arquivo atual: ${esc(d.fileName)}. Escolha outro arquivo para substituir.` : 'Ao anexar um arquivo, ele é enviado e publicado automaticamente.'}</p>
       <label class="admin-field"><span>Ou informe uma URL</span><input type="url" id="doc-url" value="${esc(d?.fileData ? '' : d?.url)}"></label>
+      <p class="admin-login-error" id="doc-audience-error" hidden>Selecione pelo menos um vínculo.</p>
       <div class="admin-form-actions">
         <div>${isNew ? '' : `<button type="button" class="admin-form-delete" id="doc-delete">EXCLUIR DOCUMENTO</button>`}</div>
         <div class="admin-form-actions-right">
@@ -442,6 +451,11 @@ function openDocForm(aud, d) {
     </form>
   `);
   el('#doc-cancel').addEventListener('click', closeAdminModal);
+  if (isNew) {
+    els('#doc-audience-chips .chip').forEach(chip => chip.addEventListener('click', () => {
+      chip.classList.toggle('is-active');
+    }));
+  }
   const arr = CONTENT.audiences[aud].documents;
   if (!isNew) el('#doc-delete').addEventListener('click', async () => {
     if (!confirm(`Excluir o documento "${d.name}"? Isso será publicado imediatamente para todos.`)) return;
@@ -456,13 +470,21 @@ function openDocForm(aud, d) {
     const category = el('#doc-category').value.trim();
     const short = el('#doc-short').value.trim();
     if (!name || !category || !short) return;
+
+    let targetAuds = [aud];
+    if (isNew) {
+      targetAuds = els('#doc-audience-chips .chip.is-active').map(chip => chip.getAttribute('data-aud'));
+      if (!targetAuds.length) { el('#doc-audience-error').hidden = false; return; }
+      el('#doc-audience-error').hidden = true;
+    }
+
     const file = el('#doc-file').files[0];
     const submitBtn = el('#doc-submit');
 
     const obj = { icon: 'file', name, category, short };
     if (file) {
       submitBtn.disabled = true; submitBtn.textContent = 'ENVIANDO...';
-      const path = `${aud}/${Date.now()}-${slugify(file.name)}.pdf`;
+      const path = `${targetAuds.join('-')}/${Date.now()}-${slugify(file.name)}.pdf`;
       const { error: upErr } = await sbClient.storage.from('documents').upload(path, file, { upsert: true, contentType: file.type || 'application/pdf' });
       submitBtn.disabled = false; submitBtn.textContent = 'SALVAR';
       if (upErr) { showToast('Erro ao enviar o arquivo: ' + upErr.message); return; }
@@ -477,9 +499,14 @@ function openDocForm(aud, d) {
       obj.fileData = d.fileData; obj.fileName = d.fileName;
     }
 
-    if (isNew) arr.push(obj);
-    else arr[arr.indexOf(d)] = obj;
-    await saveContent(isNew ? 'Documento publicado.' : 'Documento atualizado e publicado.');
+    if (isNew) {
+      targetAuds.forEach(a => CONTENT.audiences[a].documents.push({ ...obj }));
+    } else {
+      arr[arr.indexOf(d)] = obj;
+    }
+    await saveContent(isNew
+      ? (targetAuds.length > 1 ? `Documento publicado para ${targetAuds.length} vínculos.` : 'Documento publicado.')
+      : 'Documento atualizado e publicado.');
     closeAdminModal();
     renderDocsList();
   });
