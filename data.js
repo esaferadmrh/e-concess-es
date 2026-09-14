@@ -134,4 +134,35 @@ const DEFAULT_CONTENT = {
   /* Avisos/comunicados publicados pelo administrador para aparecer em destaque
      na Home. audience: 'todos' | 'clt' | 'cooperativa' | 'pj'. */
   avisos: [],
+
+  /* Desenvolvimento — estrutura comum a todos os vínculos (Certificações,
+     Treinamentos, e-Move e e-News). policyStatus/accessStatus ficam como
+     'pending' até o administrador anexar um documento ou informar uma URL
+     pelo painel, e passam a 'ready' automaticamente nesse momento. */
+  development: {
+    certificacoesInfo: {
+      title: 'INVISTA NO SEU DESENVOLVIMENTO',
+      message: 'Você sabia que a e-Safer oferece ajuda de custo para colaboradores que desejam obter certificações profissionais?',
+      comoFunciona: 'Em alinhamento com a gestão, identifique quais certificações são aderentes à sua atuação e ao seu desenvolvimento profissional e quais poderão receber investimento da e-Safer. A empresa realiza reembolso de até US$ 500 por certificação, conforme critérios definidos na política interna.',
+      policyLabel: 'Ver política de certificações',
+      policyStatus: 'pending',
+      policyUrl: null,
+      helpEmails: [{ label: 'Financeiro', email: 'financeiro@e-safer.com.br' }, { label: 'RH', email: 'rh@e-safer.com.br' }],
+    },
+    treinamentoGroups: [
+      { name: 'e-Academy', items: ['Autorresponsabilidade e Protagonismo', 'Engajamento e o Meu Papel Nisso'] },
+      { name: 'e-Leaders Academy', items: ['Basics Liderança', 'Como Atrair e Reter Talentos', 'Engajamento e o Papel do Líder no Clima'] },
+    ],
+    certificatesUrl: 'https://esafer.sharepoint.com/:f:/s/rh/IgBp60YQceQJR64JTUnQRHDjAYr7weZD1ImAtEaqkcF0pM8?e=86y4MW',
+    treinamentosHelpEmail: 'rh@e-safer.com.br',
+    oportunidadesInfo: {
+      message: 'Explore oportunidades para continuar sua jornada dentro da e-Safer.',
+      jobsUrl: 'https://www.linkedin.com/company/e-safer-tecnologia-e-consultoria-em-seguran-a-da-informa-o/jobs/',
+      jobsLabel: 'VER OPORTUNIDADES',
+      policyLabel: 'Ver política do e-Move',
+      policyStatus: 'pending',
+      policyUrl: null,
+    },
+    enews: { desc: 'Conteúdos e informações para acompanhar o que acontece por aqui.', accessStatus: 'pending', accessUrl: null },
+  },
 };

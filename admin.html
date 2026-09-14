@@ -60,6 +60,7 @@
       <button class="admin-nav-item" data-tab="calendario">Calendário</button>
       <button class="admin-nav-item" data-tab="documentos">Documentos</button>
       <button class="admin-nav-item" data-tab="avisos">Avisos</button>
+      <button class="admin-nav-item" data-tab="desenvolvimento">Desenvolvimento</button>
       <button class="admin-nav-item" data-tab="dados">Dados e Publicação</button>
     </nav>
 
@@ -118,6 +119,63 @@
         </div>
         <div class="admin-list" id="admin-avisos-list"></div>
         <button class="btn btn-primary" id="admin-aviso-new">+ NOVO AVISO</button>
+      </section>
+
+      <!-- ===================== DESENVOLVIMENTO ===================== -->
+      <section class="admin-panel" data-panel="desenvolvimento" hidden>
+        <div class="admin-panel-head">
+          <h2>Desenvolvimento</h2>
+          <p>Edite o conteúdo da área "Desenvolvimento" do site — Certificações, Treinamentos, e-Move e e-News. Este conteúdo é o mesmo para os 3 vínculos.</p>
+        </div>
+        <form id="dev-form" class="admin-form">
+
+          <div class="admin-data-card">
+            <h3>Certificações</h3>
+            <label class="admin-field"><span>Mensagem</span><textarea id="dev-cert-message"></textarea></label>
+            <label class="admin-field"><span>Como funciona</span><textarea id="dev-cert-como"></textarea></label>
+            <label class="admin-field"><span>Anexar PDF da política de certificações</span><input type="file" id="dev-cert-file" accept="application/pdf"></label>
+            <p class="admin-form-hint" id="dev-cert-file-hint"></p>
+            <label class="admin-field"><span>Ou informar uma URL da política</span><input type="url" id="dev-cert-url"></label>
+            <label class="admin-field"><span>E-mails de ajuda (um por linha, formato "Nome | e-mail")</span><textarea id="dev-cert-emails" rows="2"></textarea></label>
+          </div>
+
+          <div class="admin-data-card">
+            <h3>Treinamentos</h3>
+            <label class="admin-field">
+              <span>Grupos de treinamento (um por linha, formato "Nome do grupo | item 1; item 2; item 3")</span>
+              <textarea id="dev-train-groups" rows="4"></textarea>
+            </label>
+            <label class="admin-field"><span>Link para os certificados</span><input type="url" id="dev-train-certurl"></label>
+            <label class="admin-field"><span>E-mail de ajuda</span><input type="email" id="dev-train-email"></label>
+          </div>
+
+          <div class="admin-data-card">
+            <h3>e-Move</h3>
+            <label class="admin-field"><span>Mensagem</span><textarea id="dev-move-message"></textarea></label>
+            <div class="admin-form-row">
+              <label class="admin-field"><span>Link de oportunidades (vagas)</span><input type="url" id="dev-move-jobsurl"></label>
+              <label class="admin-field"><span>Texto do botão de vagas</span><input type="text" id="dev-move-jobslabel"></label>
+            </div>
+            <label class="admin-field"><span>Anexar PDF da política do e-Move</span><input type="file" id="dev-move-file" accept="application/pdf"></label>
+            <p class="admin-form-hint" id="dev-move-file-hint"></p>
+            <label class="admin-field"><span>Ou informar uma URL da política</span><input type="url" id="dev-move-url"></label>
+          </div>
+
+          <div class="admin-data-card">
+            <h3>e-News</h3>
+            <label class="admin-field"><span>Descrição</span><textarea id="dev-enews-desc"></textarea></label>
+            <label class="admin-field"><span>Anexar um arquivo (PDF)</span><input type="file" id="dev-enews-file" accept="application/pdf"></label>
+            <p class="admin-form-hint" id="dev-enews-file-hint"></p>
+            <label class="admin-field"><span>Ou informar uma URL</span><input type="url" id="dev-enews-url"></label>
+          </div>
+
+          <div class="admin-form-actions">
+            <div></div>
+            <div class="admin-form-actions-right">
+              <button type="submit" class="btn btn-primary" id="dev-submit">SALVAR DESENVOLVIMENTO</button>
+            </div>
+          </div>
+        </form>
       </section>
 
       <!-- ===================== DADOS E PUBLICAÇÃO ===================== -->

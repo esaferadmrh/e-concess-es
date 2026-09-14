@@ -186,6 +186,7 @@ function applyFetchedContent(newContent) {
     audiences[key].documents.length = 0;
     audiences[key].documents.push(...(aud.documents || []));
   });
+  if (newContent.development) Object.assign(development, newContent.development);
 }
 
 /* Dispara a busca do conteúdo em segundo plano assim que o script
@@ -251,33 +252,15 @@ const audiences = {
   },
 };
 
-/* Desenvolvimento — estrutura comum a todos os vínculos.
-   Certificações (política/reembolso) e e-Move (política) ainda não têm PDF
-   definido: a estrutura fica pronta, com estado pendente em vez de conteúdo inventado. */
-const development = {
-  certificacoesInfo: {
-    title: 'INVISTA NO SEU DESENVOLVIMENTO',
-    message: 'Você sabia que a e-Safer oferece ajuda de custo para colaboradores que desejam obter certificações profissionais?',
-    comoFunciona: 'Em alinhamento com a gestão, identifique quais certificações são aderentes à sua atuação e ao seu desenvolvimento profissional e quais poderão receber investimento da e-Safer. A empresa realiza reembolso de até US$ 500 por certificação, conforme critérios definidos na política interna.',
-    policyLabel: 'Ver política de certificações',
-    policyStatus: 'pending',
-    helpEmails: [{ label: 'Financeiro', email: 'financeiro@e-safer.com.br' }, { label: 'RH', email: 'rh@e-safer.com.br' }],
-  },
-  treinamentoGroups: [
-    { name: 'e-Academy', items: ['Autorresponsabilidade e Protagonismo', 'Engajamento e o Meu Papel Nisso'] },
-    { name: 'e-Leaders Academy', items: ['Basics Liderança', 'Como Atrair e Reter Talentos', 'Engajamento e o Papel do Líder no Clima'] },
-  ],
-  certificatesUrl: 'https://esafer.sharepoint.com/:f:/s/rh/IgBp60YQceQJR64JTUnQRHDjAYr7weZD1ImAtEaqkcF0pM8?e=86y4MW',
-  treinamentosHelpEmail: 'rh@e-safer.com.br',
-  oportunidadesInfo: {
-    message: 'Explore oportunidades para continuar sua jornada dentro da e-Safer.',
-    jobsUrl: 'https://www.linkedin.com/company/e-safer-tecnologia-e-consultoria-em-seguran-a-da-informa-o/jobs/',
-    jobsLabel: 'VER OPORTUNIDADES',
-    policyLabel: 'Ver política do e-Move',
-    policyStatus: 'pending',
-  },
-  enews: { desc: 'Conteúdos e informações para acompanhar o que acontece por aqui.', accessStatus: 'pending' },
-};
+/* Desenvolvimento — estrutura comum a todos os vínculos (Certificações,
+   Treinamentos, e-Move e e-News). Vem do conteúdo editável (data.js /
+   Supabase, veja CONTENT acima) para que o Painel Administrativo consiga
+   substituir os PDFs/URLs pendentes e editar as demais informações. Mantém
+   a mesma referência de objeto (nunca é reatribuída) para que todo o
+   restante do código, que lê "development.xxx" diretamente, continue
+   funcionando sem alterações mesmo depois que applyFetchedContent()
+   atualizar o conteúdo em segundo plano. */
+const development = CONTENT.development;
 
 /* Acessos rápidos — protagonismo para a NECESSIDADE, plataforma em segundo plano ("via Serviço"). */
 const accessByAudience = {

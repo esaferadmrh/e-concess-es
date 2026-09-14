@@ -98,6 +98,10 @@ async function showApp() {
     return;
   }
   CONTENT = data.data;
+  /* Compatibilidade com bancos de dados criados antes da aba "Desenvolvimento"
+     existir: preenche com o conteúdo padrão em vez de quebrar o painel. Ao
+     salvar qualquer alteração, isso já fica gravado no banco. */
+  if (!CONTENT.development) CONTENT.development = JSON.parse(JSON.stringify(DEFAULT_CONTENT.development));
 
   el('#admin-login').hidden = true;
   el('#admin-app').hidden = false;
@@ -106,6 +110,7 @@ async function showApp() {
   setupAudienceTabs();
   setupModal();
   setupDataTab();
+  setupDevPanel();
   el('#admin-benefit-new').addEventListener('click', () => openBenefitForm(state.audience.concessoes, null));
   el('#admin-event-new').addEventListener('click', () => openEventForm(state.audience.calendario, null));
   el('#admin-doc-new').addEventListener('click', () => openDocForm(state.audience.documentos, null));
@@ -147,6 +152,7 @@ function renderAll() {
   renderEventsList();
   renderDocsList();
   renderAvisosList();
+  renderDevForm();
 }
 
 /* ------------------------------------------------------------
@@ -597,6 +603,121 @@ function setupDataTab() {
     CONTENT = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
     const ok = await saveContent('Conteúdo padrão restaurado e publicado.');
     if (ok) renderAll();
+  });
+}
+
+/* ------------------------------------------------------------
+   DESENVOLVIMENTO
+   ------------------------------------------------------------ */
+function linesToTrainingGroups(text) {
+  return text.split('\n').map(l => l.trim()).filter(Boolean).map(l => {
+    const [name, itemsStr] = l.split('|').map(s => (s || '').trim());
+    const items = (itemsStr || '').split(';').map(s => s.trim()).filter(Boolean);
+    return { name: name || l, items };
+  });
+}
+function trainingGroupsToLines(groups) {
+  return (groups || []).map(g => `${g.name} | ${(g.items || []).join('; ')}`).join('\n');
+}
+
+function renderDevForm() {
+  const d = CONTENT.development;
+  const cert = d.certificacoesInfo, mov = d.oportunidadesInfo, news = d.enews;
+
+  el('#dev-cert-message').value = cert.message || '';
+  el('#dev-cert-como').value = cert.comoFunciona || '';
+  el('#dev-cert-file').value = '';
+  el('#dev-cert-url').value = cert.policyStatus === 'ready' ? (cert.policyUrl || '') : '';
+  el('#dev-cert-file-hint').textContent = cert.policyStatus === 'ready'
+    ? 'Política publicada. Anexe outro arquivo (ou informe outra URL) para substituir.'
+    : 'Nada publicado ainda — o site mostra "em breve" até anexar um PDF ou informar uma URL.';
+  el('#dev-cert-emails').value = emailsToLines(cert.helpEmails);
+
+  el('#dev-train-groups').value = trainingGroupsToLines(d.treinamentoGroups);
+  el('#dev-train-certurl').value = d.certificatesUrl || '';
+  el('#dev-train-email').value = d.treinamentosHelpEmail || '';
+
+  el('#dev-move-message').value = mov.message || '';
+  el('#dev-move-jobsurl').value = mov.jobsUrl || '';
+  el('#dev-move-jobslabel').value = mov.jobsLabel || '';
+  el('#dev-move-file').value = '';
+  el('#dev-move-url').value = mov.policyStatus === 'ready' ? (mov.policyUrl || '') : '';
+  el('#dev-move-file-hint').textContent = mov.policyStatus === 'ready'
+    ? 'Política publicada. Anexe outro arquivo (ou informe outra URL) para substituir.'
+    : 'Nada publicado ainda — o site mostra "em breve" até anexar um PDF ou informar uma URL.';
+
+  el('#dev-enews-desc').value = news.desc || '';
+  el('#dev-enews-file').value = '';
+  el('#dev-enews-url').value = news.accessStatus === 'ready' ? (news.accessUrl || '') : '';
+  el('#dev-enews-file-hint').textContent = news.accessStatus === 'ready'
+    ? 'Publicado. Anexe outro arquivo (ou informe outra URL) para substituir.'
+    : 'Nada publicado ainda — o site mostra "em breve" até anexar um arquivo ou informar uma URL.';
+}
+
+async function uploadDevFile(file, label) {
+  const path = `desenvolvimento/${Date.now()}-${slugify(file.name)}.pdf`;
+  const { error } = await sbClient.storage.from('documents').upload(path, file, { upsert: true, contentType: file.type || 'application/pdf' });
+  if (error) throw new Error(`${label}: ${error.message}`);
+  const { data: pub } = sbClient.storage.from('documents').getPublicUrl(path);
+  return pub.publicUrl;
+}
+
+function setupDevPanel() {
+  renderDevForm();
+  el('#dev-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const d = CONTENT.development;
+    const cert = d.certificacoesInfo, mov = d.oportunidadesInfo, news = d.enews;
+    const certFile = el('#dev-cert-file').files[0];
+    const moveFile = el('#dev-move-file').files[0];
+    const enewsFile = el('#dev-enews-file').files[0];
+    const submitBtn = el('#dev-submit');
+
+    submitBtn.disabled = true; submitBtn.textContent = 'SALVANDO...';
+    try {
+      if (certFile) {
+        cert.policyUrl = await uploadDevFile(certFile, 'Certificações');
+        cert.policyStatus = 'ready';
+      } else if (el('#dev-cert-url').value.trim()) {
+        cert.policyUrl = el('#dev-cert-url').value.trim();
+        cert.policyStatus = 'ready';
+      }
+      cert.message = el('#dev-cert-message').value.trim();
+      cert.comoFunciona = el('#dev-cert-como').value.trim();
+      cert.helpEmails = linesToEmails(el('#dev-cert-emails').value);
+
+      d.treinamentoGroups = linesToTrainingGroups(el('#dev-train-groups').value);
+      d.certificatesUrl = el('#dev-train-certurl').value.trim();
+      d.treinamentosHelpEmail = el('#dev-train-email').value.trim();
+
+      if (moveFile) {
+        mov.policyUrl = await uploadDevFile(moveFile, 'e-Move');
+        mov.policyStatus = 'ready';
+      } else if (el('#dev-move-url').value.trim()) {
+        mov.policyUrl = el('#dev-move-url').value.trim();
+        mov.policyStatus = 'ready';
+      }
+      mov.message = el('#dev-move-message').value.trim();
+      mov.jobsUrl = el('#dev-move-jobsurl').value.trim();
+      mov.jobsLabel = el('#dev-move-jobslabel').value.trim();
+
+      if (enewsFile) {
+        news.accessUrl = await uploadDevFile(enewsFile, 'e-News');
+        news.accessStatus = 'ready';
+      } else if (el('#dev-enews-url').value.trim()) {
+        news.accessUrl = el('#dev-enews-url').value.trim();
+        news.accessStatus = 'ready';
+      }
+      news.desc = el('#dev-enews-desc').value.trim();
+    } catch (err) {
+      submitBtn.disabled = false; submitBtn.textContent = 'SALVAR DESENVOLVIMENTO';
+      showToast('Erro ao enviar arquivo: ' + err.message);
+      return;
+    }
+
+    await saveContent('Desenvolvimento atualizado e publicado.');
+    submitBtn.disabled = false; submitBtn.textContent = 'SALVAR DESENVOLVIMENTO';
+    renderDevForm();
   });
 }
 function downloadFile(filename, content, mime) {
